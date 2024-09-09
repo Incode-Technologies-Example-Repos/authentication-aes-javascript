@@ -1,0 +1,87 @@
+html, body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#login {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#login label, #login input, #login button{
+    display: block;
+    width: 100%;
+}
+
+#app {
+    flex-grow: 1;
+}
+
+
+
+
+/* Incode Login */
+/* Main container for the Incode login component. */
+.IncodeLoginContainer {
+}
+/* Container that holds the capture button within the Incode login component. */
+.IncodeLoginCaptureButtonContainer {
+}
+/* Container holding the webcam view in the Incode login component. */
+.IncodeLoginWebcamContainer {
+}
+/* Container for borders in the Incode login component. */
+.IncodeLoginBordersContainer {
+}
+/* Borders during loading states within the Incode login component. */
+.IncodeLoginLoadingBorders {
+}
+/* This class is used to hide login in the Incode login component. */
+.IncodeLoginHidder {
+}
+/* Outer part of the oval-shaped camera frame in the Incode login component. */
+.IncodeLoginCameraOvalOuter {
+}
+/* Inner part of the oval-shaped camera frame in the Incode login component. */
+.IncodeLoginCameraOvalInner {
+}
+/* Frame that indicates the user's face area during login. */
+.IncodeLoginFaceFrame {
+}
+/* Webcam in the Incode login component. */
+.IncodeLoginWebcam {
+}
+/* Text inside the oval-shaped camera frame in the Incode login component. */
+.IncodeLoginCameraOvalInnerText {
+}
+/* Inline notifications that appear within the Incode login component. */
+.IncodeLoginNotificationInline {
+}
+
+/* Incode Login Desktop */
+/* Main container for the Incode login component in desktop view. */
+.IncodeLoginDesktopContainer {
+}
+/* Container that holds the capture button within the Incode login desktop component. */
+.IncodeLoginDesktopCaptureButtonContainer {
+}
+/* Container holding the webcam view in the Incode login desktop component. */
+.IncodeLoginDesktopWebcamContainer {
+}
+/* Class used for styling the face mask in the Incode login desktop component. */
+.IncodeLoginDesktopFaceMask {
+}
+/* Frame that indicates the user's face area during login in the desktop view. */
+.IncodeLoginDesktopFaceFrame {
+}
+/* Webcam in the Incode login desktop component. */
+.IncodeLoginDesktopWebcam {
+}
+/* Notifications that appear within the Incode login desktop component. */
+.IncodeLoginDesktopNotification {
+}
