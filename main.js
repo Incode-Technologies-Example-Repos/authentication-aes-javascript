@@ -1,3 +1,5 @@
+import { fakeBackendAuth } from './fake_backend'
+
 let onBoarding
 
 const mainContainer = document.getElementById('app')
@@ -17,14 +19,13 @@ function identifyUser (identityId) {
         // User has an Incode Identity.
         // Verify using your backend that the faceMatch was actually valid and
         // not man in the middle attack
-        const response = await fetch(`${tokenServerURL}/auth`,
-          {
-            method: 'POST',
-            mode: 'cors',
-            body: JSON.stringify({ token, transactionId, interviewToken })
-          }
-        )
-        const verification = await response.json()
+        let verification = {}
+        try {
+          verification = await fakeBackendAuth(token, transactionId, interviewToken)
+        } catch (e) {
+          showError(e)
+        }
+
         if (verification.verified === true) {
           finish(customerId, email)
         } else {
@@ -52,22 +53,23 @@ function finish (customerId, email) {
 async function app () {
   // Create the instance of incode linked to a client
   const apiURL = import.meta.env.VITE_API_URL
-  // Enable for 1:N
-  // const clientId = import.meta.env.VITE_CLIENT_ID;
-  // const apiKey = import.meta.env.VITE_API_KEY;
+  onBoarding = window.OnBoarding.create({ apiURL })
+  const identityIdInput = document.getElementById('identity-id')
 
-  onBoarding = window.OnBoarding.create({
-    apiURL
-    // clientId, // Enable for 1:N
-    // apiKey // Enable for 1:N
-  })
+  // Get it from localstorage so dev doesn't have to type it everytime
+  const identityId = localStorage.getItem('identityId')
+  if (identityId) {
+    identityIdInput.value = identityId
+  }
 
   // Empty the message and starting the flow
   mainContainer.innerHTML = ''
   loginContainer.style.display = 'flex'
   loginButton.addEventListener('click', () => {
-    const identityIdInput = document.getElementById('identity-id')
     loginContainer.style.display = 'none'
+    // Save it to localstorage so dev doesn't have to type it everytime
+    localStorage.setItem('identityId', identityIdInput.value)
+
     identifyUser(identityIdInput.value)
   })
 }
