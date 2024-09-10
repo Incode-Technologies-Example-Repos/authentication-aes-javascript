@@ -1,75 +1,86 @@
-const tokenServerURL= import.meta.env.VITE_TOKEN_SERVER_URL
-let onBoarding;
+const tokenServerURL = import.meta.env.VITE_TOKEN_SERVER_URL
+let onBoarding
 
-const mainContainer = document.getElementById("app");
-const loginContainer = document.getElementById("login");
-const loginButton = document.getElementById("login-button");
+const mainContainer = document.getElementById('app')
+const loginContainer = document.getElementById('login')
+const loginButton = document.getElementById('login-button')
 
-function showError(e=null) {
-  mainContainer.innerHTML = "Something Went Wrong, see console for details...";
+function showError (e = null) {
+  mainContainer.innerHTML = 'Something Went Wrong, see console for details...'
   console.log(e)
 }
 
-function identifyUser(identityId){
-  onBoarding.renderLogin(mainContainer,{
+function identifyUser (identityId) {
+  onBoarding.renderLogin(mainContainer, {
     onSuccess: async (response) => {
-      const {token, transactionId, interviewToken, faceMatch, customerId, email} = response;
-      if (faceMatch){
+      const { token, transactionId, interviewToken, faceMatch, customerId, email } = response
+      if (faceMatch) {
         // User has an Incode Identity.
         // Verify using your backend that the faceMatch was actually valid and
         // not man in the middle attack
         const response = await fetch(`${tokenServerURL}/auth`,
-        {
-          method: "POST",
-          mode: "cors", 
-          body: JSON.stringify({token,transactionId: transactionId, interviewToken})
+          {
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify({ token, transactionId, interviewToken })
+          }
+        )
+        const verification = await response.json()
+        if (verification.verified === true) {
+          finish(customerId, email)
+        } else {
+          showError(new Error('FaceMatch is invalid.'))
         }
-      );
-      const verification = await response.json();
-      if(verification.verified===true){
-        finish(customerId, email);
       } else {
-        showError(new Error("FaceMatch is invalid."));
+        showError(new Error('Face did not match any user.'))
       }
-    } else {
-      showError(new Error("Face did not match any user."));
-    }
-  },
-  onError: error => {
-    showError(error)
+    },
+    onError: error => {
+      showError(error)
     // User not found. Add rejection your logic here
-  },
-  isOneToOne: true,
-  oneToOneProps: {
-    identityId: identityId,
-  }
-});
+    },
+    isOneToOne: true,
+    oneToOneProps: {
+      identityId
+    }
+  })
 }
 
-function finish(customerId, email) {
-  mainContainer.innerHTML = `Sucessfull Login:<br/>\n<div>CustomerId: ${customerId}</div>\n<div>Email: ${email}</div>`;
+function finish (customerId, email) {
+  mainContainer.innerHTML = `Sucessfull Login:<br/>\n<div>CustomerId: ${customerId}</div>\n<div>Email: ${email}</div>`
 }
 
-async function app() {
+async function app () {
   // Create the instance of incode linked to a client
-  const apiURL = import.meta.env.VITE_API_URL;
+  const apiURL = import.meta.env.VITE_API_URL
   // Enable for 1:N
-  //const clientId = import.meta.env.VITE_CLIENT_ID;
-  //const apiKey = import.meta.env.VITE_API_KEY;
-  
+  // const clientId = import.meta.env.VITE_CLIENT_ID;
+  // const apiKey = import.meta.env.VITE_API_KEY;
+
+  const identityIdInput = document.getElementById('identity-id')
+
   onBoarding = window.OnBoarding.create({
     apiURL
     // clientId, // Enable for 1:N
     // apiKey // Enable for 1:N
-  });
-  
+  })
+
+  // Get it from localstorage so dev doesn't have to type it everytime
+  const identityId = localStorage.getItem('identityId')
+  if (identityId) {
+    identityIdInput.value = identityId
+  }
+
   // Empty the message and starting the flow
-  mainContainer.innerHTML = "";
-  loginContainer.style.display="flex";
-  loginButton.addEventListener('click', () =>{
-    const identityIdInput = document.getElementById("identity-id");
-    loginContainer.style.display="none";
+  mainContainer.innerHTML = ''
+  loginContainer.style.display = 'flex'
+  loginButton.addEventListener('click', () => {
+    loginContainer.style.display = 'none'
+
+    // Save it to localstorage so dev doesn't have to type it everytime
+    localStorage.setItem('identityId', identityIdInput.value)
+
     identifyUser(identityIdInput.value)
   })
 }
-document.addEventListener("DOMContentLoaded", app);
+document.addEventListener('DOMContentLoaded', app)
