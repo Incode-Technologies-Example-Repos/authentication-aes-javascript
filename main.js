@@ -27,7 +27,7 @@ function identifyUser (identityId) {
         )
         const verification = await response.json()
         if (verification.verified === true) {
-          finish(customerId, email)
+          finish(customerId, email, interviewToken)
         } else {
           showError(new Error('FaceMatch is invalid.'))
         }
@@ -46,8 +46,38 @@ function identifyUser (identityId) {
   })
 }
 
-function finish (customerId, email) {
-  mainContainer.innerHTML = `Sucessfull Login:<br/>\n<div>CustomerId: ${customerId}</div>\n<div>Email: ${email}</div>`
+function finish (customerId, email, interviewToken) {
+  mainContainer.innerHTML = `Sucessfull Login:<br/>\n<div>CustomerId: ${customerId}</div>\n<div>Email: ${email}</div><br/><input type="file" name="upload" id="file-input" accept="application/pdf" /><button id="sign-button">Sign</button>`
+  const fileInput = document.getElementById('file-input')
+  const signButton = document.getElementById('sign-button')
+
+  signButton.addEventListener('click', async () => {
+    const file = fileInput.files[0]
+    const base64Contract = await toBase64(file)
+    sign(interviewToken, base64Contract.replace('data:application/pdf;base64,', ''))
+  })
+}
+
+async function sign (interviewToken, base64Contract) {
+  const response = await fetch(`${tokenServerURL}/sign`,
+    {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify({ interviewToken, base64Contract })
+    }
+  )
+  const signData = await response.json()
+  const { referenceId, documentUrl } = signData
+  mainContainer.innerHTML = `Sucessfull sign:<br/>\n<div>refenceId: ${referenceId}</div>\n<div>DocumentUrl: <a href="${documentUrl}">Download</a></div>`
+}
+
+function toBase64 (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = reject
+  })
 }
 
 async function app () {
