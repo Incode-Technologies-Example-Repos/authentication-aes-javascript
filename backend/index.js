@@ -156,7 +156,6 @@ const doGet = async (url, params, headers) => {
   }
 }
 
-
 // Listen for HTTP
 const httpPort = 3000;
 

@@ -93,16 +93,11 @@ function toBase64 (file) {
 async function app () {
   // Create the instance of incode linked to a client
   const apiURL = import.meta.env.VITE_API_URL
-  // Enable for 1:N
-  // const clientId = import.meta.env.VITE_CLIENT_ID;
-  // const apiKey = import.meta.env.VITE_API_KEY;
 
   const identityIdInput = document.getElementById('identity-id')
 
   onBoarding = window.OnBoarding.create({
     apiURL
-    // clientId, // Enable for 1:N
-    // apiKey // Enable for 1:N
   })
 
   // Get it from localstorage so dev doesn't have to type it everytime
