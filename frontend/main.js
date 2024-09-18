@@ -1,4 +1,5 @@
-const tokenServerURL = import.meta.env.VITE_TOKEN_SERVER_URL
+const ServerUrl = import.meta.env.VITE_SERVER_URL
+/** Imports incode instance added with script tag **/
 let onBoarding
 
 const mainContainer = document.getElementById('app')
@@ -18,7 +19,7 @@ function identifyUser (identityId) {
         // User has an Incode Identity.
         // Verify using your backend that the faceMatch was actually valid and
         // not man in the middle attack
-        const response = await fetch(`${tokenServerURL}/auth`,
+        const response = await fetch(`${ServerUrl}/verify`,
           {
             method: 'POST',
             mode: 'cors',
@@ -59,7 +60,7 @@ function finish (customerId, email, interviewToken) {
 }
 
 async function sign (interviewToken, base64Contract) {
-  const response = await fetch(`${tokenServerURL}/sign`,
+  const response = await fetch(`${ServerUrl}/sign`,
     {
       method: 'POST',
       mode: 'cors',
