@@ -27,13 +27,14 @@ const adminHeader = {
 // Receives the information about a faceMatch attempt and verifies
 // if it was correct and has not been tampered.
 app.post('/verify', async (req, res) => {
+  /** Get parameters from body */
+  const faceMatchData = JSON.parse(req.body.toString());
+  const {transactionId, token, interviewToken} = faceMatchData;
+  const verificationParams = { transactionId, token, interviewToken };
+  
   let response={};
   try{
-    /** Get parameters from body */
-    const faceMatchData = JSON.parse(req.body.toString());
-    const {transactionId, token, interviewToken} = faceMatchData;
-    const verificationParams = { transactionId, token, interviewToken };
-    
+    /** Run Call against incode API **/
     const verifyAttemptUrl = `${process.env.API_URL}/omni/authentication/verify`;
     response = await doPost(verifyAttemptUrl, verificationParams, adminHeader);
   } catch(e) {
@@ -102,7 +103,7 @@ app.post('/sign', async (req, res) => {
     /** Return referenceId and documentUrl */
     const {documentRef, documentUrl} = justSigned
     response = {referenceId, documentUrl}
-  
+    
   } catch(e) {
     console.log(e.message);
     res.status(500).send({success:false, error: e.message});
@@ -131,7 +132,7 @@ const doPost = async (url, bodyparams, headers) => {
   try {
     const response = await fetch(url, { method: 'POST', body: JSON.stringify(bodyparams), headers});
     if (!response.ok) {
-     //console.log(response.json());
+      //console.log(response.json());
       throw new Error('Request failed with code ' + response.status)
     }
     return response.json();

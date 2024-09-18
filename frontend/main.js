@@ -16,9 +16,9 @@ function identifyUser (identityId) {
     onSuccess: async (response) => {
       const { token, transactionId, interviewToken, faceMatch, customerId, email } = response
       if (faceMatch) {
-        // User has an Incode Identity.
-        // Verify using your backend that the faceMatch was actually valid and
-        // not man in the middle attack
+        /**  User has an Incode Identity.
+         * Verify using your backend that the faceMatch was actually valid and
+         * not man in the middle attack */
         const response = await fetch(`${ServerUrl}/verify`,
           {
             method: 'POST',
@@ -60,6 +60,9 @@ function finish (customerId, email, interviewToken) {
 }
 
 async function sign (interviewToken, base64Contract) {
+  const signButton = document.getElementById('sign-button')
+  signButton.disabled = true
+  signButton.innerHTML = 'Signing...'
   const response = await fetch(`${ServerUrl}/sign`,
     {
       method: 'POST',
@@ -67,9 +70,15 @@ async function sign (interviewToken, base64Contract) {
       body: JSON.stringify({ interviewToken, base64Contract })
     }
   )
+
+  if (!response.ok) {
+    console.log(response)
+    showError("Couldn't Sign")
+  }
+
   const signData = await response.json()
   const { referenceId, documentUrl } = signData
-  mainContainer.innerHTML = `Sucessfull sign:<br/>\n<div>refenceId: ${referenceId}</div>\n<div>DocumentUrl: <a href="${documentUrl}">Download</a></div>`
+  mainContainer.innerHTML = `Sucessfull Signature:<br/>\n<div>refenceId: ${referenceId}</div>\n<div>DocumentUrl: <a href="${documentUrl}">Download</a></div>`
 }
 
 function toBase64 (file) {
