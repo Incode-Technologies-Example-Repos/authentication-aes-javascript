@@ -13,8 +13,12 @@ function showError (e = null) {
 
 function identifyUser (identityId) {
   onBoarding.renderLogin(mainContainer, {
+    isOneToOne: true,
+    oneToOneProps: {
+      identityId
+    },
     onSuccess: async (response) => {
-      const { token, transactionId, interviewToken, faceMatch, customerId, email } = response
+      const { token, transactionId, interviewToken, faceMatch, identityId, email } = response
       if (faceMatch) {
         /**  User has an Incode Identity.
          * Verify using your backend that the faceMatch was actually valid and
@@ -28,7 +32,7 @@ function identifyUser (identityId) {
         )
         const verification = await response.json()
         if (verification.verified === true) {
-          finish(customerId, email, interviewToken)
+          finish(identityId, email, interviewToken)
         } else {
           showError(new Error('FaceMatch is invalid.'))
         }
@@ -39,16 +43,12 @@ function identifyUser (identityId) {
     onError: error => {
       showError(error)
     // User not found. Add rejection your logic here
-    },
-    isOneToOne: true,
-    oneToOneProps: {
-      identityId
     }
   })
 }
 
-function finish (customerId, email, interviewToken) {
-  mainContainer.innerHTML = `Sucessfull Login:<br/>\n<div>CustomerId: ${customerId}</div>\n<div>Email: ${email}</div><br/><input type="file" name="upload" id="file-input" accept="application/pdf" /><button id="sign-button">Sign</button>`
+function finish (identityId, email, interviewToken) {
+  mainContainer.innerHTML = `Sucessfull Login:<br/>\n<div>IdentityId: ${identityId}</div>\n<div>Email: ${email}</div><br/><input type="file" name="upload" id="file-input" accept="application/pdf" /><button id="sign-button">Sign</button>`
   const fileInput = document.getElementById('file-input')
   const signButton = document.getElementById('sign-button')
 

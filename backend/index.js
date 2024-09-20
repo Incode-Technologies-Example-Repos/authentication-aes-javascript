@@ -29,8 +29,8 @@ const adminHeader = {
 app.post('/verify', async (req, res) => {
   /** Get parameters from body */
   const faceMatchData = JSON.parse(req.body.toString());
-  const {transactionId, token, interviewToken} = faceMatchData;
-  const verificationParams = { transactionId, token, interviewToken };
+  const {token, transactionId, interviewToken} = faceMatchData;
+  const verificationParams = { token,transactionId, interviewToken };
   
   let response={};
   try{
