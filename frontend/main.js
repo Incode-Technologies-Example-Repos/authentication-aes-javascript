@@ -18,7 +18,7 @@ function identifyUser (identityId) {
       identityId
     },
     onSuccess: async (response) => {
-      const { token, transactionId, interviewToken, faceMatch, identityId, email } = response
+      const { token, transactionId, interviewToken, faceMatch, customerId, email } = response
       if (faceMatch) {
         /**  User has an Incode Identity.
          * Verify using your backend that the faceMatch was actually valid and
@@ -32,7 +32,7 @@ function identifyUser (identityId) {
         )
         const verification = await response.json()
         if (verification.verified === true) {
-          finish(identityId, email, interviewToken)
+          finish(customerId, email, interviewToken)
         } else {
           showError(new Error('FaceMatch is invalid.'))
         }
@@ -47,8 +47,8 @@ function identifyUser (identityId) {
   })
 }
 
-function finish (identityId, email, interviewToken) {
-  mainContainer.innerHTML = `Sucessfull Login:<br/>\n<div>IdentityId: ${identityId}</div>\n<div>Email: ${email}</div><br/><input type="file" name="upload" id="file-input" accept="application/pdf" /><button id="sign-button">Sign</button>`
+function finish (customerId, email, interviewToken) {
+  mainContainer.innerHTML = `Sucessfull Login:<br/>\n<div>CustomerId: ${customerId}</div>\n<div>Email: ${email}</div><br/><input type="file" name="upload" id="file-input" accept="application/pdf" /><button id="sign-button">Sign</button>`
   const fileInput = document.getElementById('file-input')
   const signButton = document.getElementById('sign-button')
 
