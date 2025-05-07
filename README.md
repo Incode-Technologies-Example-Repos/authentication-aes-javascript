@@ -19,7 +19,7 @@ sequenceDiagram
         w -->> b: token<br>transactionId<br>interviewToken
         note over b: myapp.com/api/verify
         note over b: get adminToken
-        b-->> a: {token, transactionId,interviewToken,header:adminToken}
+        b-->> a: token<br>transactionId<br>interviewToken<br>header:adminToken
         note over a: /omni/authentication/verify
         a-->>b: verified
         b-->>w: verified
@@ -34,21 +34,21 @@ sequenceDiagram
             
             b -->>a: {header:interviewToken}
             note over a: /omni/es/generateDocumentUploadUrl
-            a -->>b: {referenceId, preSignedUrl}
+            a -->>b: referenceId<br>preSignedUrl
             
-            b -->>a: {contract in binary}
+            b -->>a: Contract in Binary
             note over a: preSignedUrl
-            a -->>b: {httpstatus:200}
+            a -->>b: httpstatus:200
 
-            b -->>a: {documentRef:referenceId, userConsented:true, header:interviewToken}
+            b -->>a: documentRef:referenceId<br>userConsented:true<br>header:interviewToken
             note over a: /omni/es/process/sign
-            a -->>b: {success:true}
+            a -->>b: success:true
             
-            b -->>a: {header:interviewToken}
+            b -->>a: header:interviewToken
             note over a: /omni/es/documents/signed
             a -->>b: [list of signed documents]
             note over b: Extract signed documentUrl
-            b -->> w: {referenceId, documentUrl}
+            b -->> w: referenceId<br>documentUrl
             note over w: Show Document Download<br> Link valid for 15 mins
         end
     end
