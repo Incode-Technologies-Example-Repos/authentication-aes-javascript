@@ -95,7 +95,7 @@ async function app () {
   const apiURL = import.meta.env.VITE_API_URL
 
   const identityIdInput = document.getElementById('identity-id')
-
+  console.log({apiURL})
   onBoarding = window.OnBoarding.create({
     apiURL
   })

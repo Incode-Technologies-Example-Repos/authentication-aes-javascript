@@ -1,31 +1,4 @@
 # Face Authentication Example
-This sample does face authentication following the next process.
-
-```mermaid
-sequenceDiagram
-    participant w as WebSDK
-    participant b as Backend
-    participant a as API
-
-    note over w: create()
-    note over w: renderLogin()<br>Send identityId for 1:1
-    alt faceMatch==false
-        note over w: User doesn't exists
-    else
-        w -->> b: transactionId<br>token<br>interviewId
-        note over b: myapp.com/api/auth
-        note over b: get adminToken
-        b-->> a: transactionId<br>token<br>interviewId<br>adminToken
-        note over a: /omni/authentication/verify
-        a-->>b: verified
-        b-->>w: verified
-        alt verified==true
-            note over w: Authentication Verified
-        else
-            note over w: Authentication is not valid
-        end
-    end
-```
 
 # Requirements
 Vite requires Node.js version 14.18+, 16+. some templates require a higher Node.js
